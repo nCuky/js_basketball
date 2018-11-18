@@ -11,63 +11,19 @@ let didGameEnd = false,
 gameCanvas.width = window.innerWidth;
 gameCanvas.height = window.innerHeight;
 
-// Main loop
-// while (!didLevelEnd) {
-for (i = 0; i < 10; i++) {
-    new Ball();
-}
-
 function Ball() {
-    let radius = function () {
-        return ((Math.random() * 10) + 25);
-    }
+    this.isAlive = true;
+    this.radius = (Math.random() * 10) + 25;
+    this.posLeft = /* this.radius + */ (Math.random() * (viewportWidth - this.radius));
+    this.posTop = /* this.radius + */ (Math.random() * (0.25 * viewportHeight));
 
-    let posLeft = function () {
-        let newLeftPos = /* this.radius + */ (Math.random() * (viewportWidth - this.radius));
+    // Gravity Force should be between 1 and 20 pixels down:
+    this.gravityForce = gravityForce = 1 + (Math.random() * 20);
 
-        return newLeftPos;
-    }
+    // Wait Time should be between 200 and 600 milliseconds long:
+    this.fallTime = (Math.random() * 400) + 200;
 
-    let posTop = function () {
-        let newTopPos = /* this.radius + */ (Math.random() * (0.25 * viewportHeight));
-
-        return newTopPos;
-    }
-
-    let gravityForce = function () {
-        let gravityForce = 0;
-
-        // Gravity Force should be between 0 (exclusive) and 20 pixels down:
-        while (gravityForce == 0) {
-            gravityForce = (Math.random() * 20);
-        }
-
-        return gravityForce;
-    }
-
-    let fallTime = function () {
-        let fallTime = 0;
-
-        // Wait Time should be between 200 and 600 milliseconds long:
-        while (fallTime == 0) {
-            fallTime = (Math.random() * 400) + 200;
-        }
-
-        return fallTime;
-    }
-    let isAlive = true;
-
-    let diameter = function () {
-        this.radius * 2;
-    }
-
-    // Object.defineProperty(this.prototype, {
-    //     diameter: {
-    //         get: function () { return this.radius * 2; }
-    //     }
-    // })
-
-    this.startFalling();
+    let diameter = this.radius * 2;
 }
 
 Ball.prototype.getRandomRadius = function () {
@@ -152,4 +108,10 @@ function didLevelEnd() {
     let temp = didGameEnd;
     didGameEnd = true;
     return temp;
+}
+
+// Main loop
+// while (!didLevelEnd) {
+for (i = 0; i < 10; i++) {
+    new Ball().startFalling();
 }
