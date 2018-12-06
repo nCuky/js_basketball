@@ -1,5 +1,8 @@
+
 // Global Constants
-const CANVAS_ID = "gameCanvas";
+const CANVAS_ID = "gameCanvas",
+	  
+
 
 // Global Data
 let didGameEnd = false,
@@ -10,6 +13,14 @@ let didGameEnd = false,
 
 gameCanvas.width = window.innerWidth;
 gameCanvas.height = window.innerHeight;
+
+function Game()
+{
+	while !(didLevelEnd)
+	{
+		
+	}
+}
 
 function Ball() {
     this.isAlive = true;
