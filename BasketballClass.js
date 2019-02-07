@@ -1,18 +1,36 @@
-
 // Global Constants
 const CANVAS_ID = "gameCanvas";
-const COLORS = ["red", "green", "blue", "yellow", "purple", "black", "brown", "orange"];
+const COLORS = ["lightpink", 
+                "lightgreen",
+                "lightskyblue", 
+                "turquoise", 
+                "darksalmon", 
+                "royalblue", 
+                "burlywood",
+                "greenyellow",
+                "mediumpurple",
+                "moccasin",
+                "peachpuff"];
 
 // Global Data
 let didGameEnd = false;
-let viewportWidth = document.documentElement.clientWidth;
-let viewportHeight = document.documentElement.clientHeight;
+//let viewportWidth = document.documentElement.clientWidth;
+//let viewportHeight = document.documentElement.clientHeight;
+
+//let viewportWidth = window.innerWidth;
+//let viewportHeight = window.innerHeight;
 let gameCanvas = document.getElementById(CANVAS_ID);
 let canvasCtxt = gameCanvas.getContext("2d");
 let intervalFunc;
+let game;
 
 function startPlaying() {
-    // Starting the game
+    if ((game != undefined) && (game != null)){
+		game.stopPlayingGame();
+		game = null;
+	}
+	
+	// Starting the game
     game = new Game();
 }
 
@@ -25,13 +43,22 @@ async function dropBall(ball) {
     ball.startFalling();
 }
 
+function resizeCanvas(){		
+    // gameCanvas.width = window.innerWidth;
+    // gameCanvas.height = window.innerHeight - 40; // Button height
+    
+	gameCanvas.width = viewportWidth;
+	gameCanvas.height = viewportHeight - 40; // Button height
+}
+
 class Game {
     constructor() {
-        this.ballsArr = [];
-
+		didGameEnd = false;
+		this.ballsArr = [];
+		
         gameCanvas.width = window.innerWidth;
         gameCanvas.height = window.innerHeight;
-
+		
         //canvasCtxt.globalCompositeOperation = "copy";
 
         this.startPlayingGame();
@@ -52,7 +79,18 @@ class Game {
             }
         }
     }
-
+	
+	stopPlayingGame(){
+		let i = 0;
+		
+		for (i = 0; i < 10; i++) {
+			if (this.ballsArr[i] != undefined &&
+				this.ballsArr[i] != null) {
+				this.ballsArr[i].stopFalling();
+			}
+		}
+	}
+	
     didLevelEnd() {
         // Temporary - allowing a single iteration
         let temp = didGameEnd; // the global variable didGameEnd starts with false
@@ -139,7 +177,7 @@ class Ball {
     }
 
     graveYardArea() {
-        let graveYardArea = viewportHeight + this._diameter;
+        let graveYardArea = gameCanvas.height + this._diameter;
 
         return graveYardArea;
     }
@@ -152,7 +190,7 @@ function getRandomRadius() {
 }
 
 function getRandomLeftPos(radius) {
-    let newLeftPos = Math.random() * (viewportWidth - radius);
+    let newLeftPos = Math.random() * (gameCanvas.width - radius);
 
     // if (viewportWidth - newLeftPos < btnBoundingWidth) {
     //     newLeftPos = viewportWidth - btnBoundingWidth;
@@ -169,7 +207,7 @@ function getRandomLeftPos(radius) {
 }
 
 function getRandomTopPos() {
-    let newTopPos = Math.random() * (0.25 * viewportHeight);
+    let newTopPos = Math.random() * (0.25 * gameCanvas.height);
 
     return newTopPos;
 }
@@ -188,9 +226,9 @@ function getRandomGravity() {
 function getRandomFallTime() {
     let fallTime = 0;
 
-    // Wait Time should be between 20 and 220 milliseconds long:
+    // Wait Time should be between 50 and 100 milliseconds long:
     while (fallTime == 0) {
-        fallTime = (Math.random() * 200) + 20;
+        fallTime = (Math.random() * 100) + 50;
     }
 
     return fallTime;
